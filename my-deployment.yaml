@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jeff-ex-deployment
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: jeff-ex
+  template:
+    metadata:
+      labels:
+        app: jeff-ex
+    spec:
+      containers:
+      - name: jeff-ex-container
+        image: ghcr.io/ej31/jeff-ex:1.3-amd64
+        ports:
+        - containerPort: 3000
+        volumeMounts:
+        - name: jeff-data-volume
+          mountPath: /app/data    # 컨테이너 내부에 마운트할 경로
+      volumes:
+      - name: jeff-data-volume
+        persistentVolumeClaim:
+          claimName: my-pvc

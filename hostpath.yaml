@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hostpath-deployment-a
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: hostpath-app-a
+  template:
+    metadata:
+      labels:
+        app: hostpath-app-a
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: worker1
+      containers:
+      - name: jeff-server
+        image: ghcr.io/ej31/jeff-ex:1.3-amd64
+        ports:
+        - containerPort: 3000
+        volumeMounts:
+        - name: shared-volume
+          mountPath: /app/data
+      volumes:
+      - name: shared-volume
+        hostPath:
+          path: /tmp/hostpath-shared
+          type: DirectoryOrCreate
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hostpath-deployment-b
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: hostpath-app-b
+  template:
+    metadata:
+      labels:
+        app: hostpath-app-b
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: worker2
+      containers:
+      - name: jeff-server
+        image: ghcr.io/ej31/jeff-ex:1.3-amd64
+        ports:
+        - containerPort: 3000
+        volumeMounts:
+        - name: shared-volume
+          mountPath: /app/data
+      volumes:
+      - name: shared-volume
+        hostPath:
+          path: /tmp/hostpath-shared
+          type: DirectoryOrCreate

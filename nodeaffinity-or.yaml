@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nodeaffinity-or-required
+spec:
+  replicas: 6
+  selector:
+    matchLabels:
+      app: nodeaffinity-or-required
+  template:
+    metadata:
+      labels:
+        app: nodeaffinity-or-required
+    spec:
+      containers:
+      - name: nodeaffinity-or-required-container
+        image: ghcr.io/ej31/jeff-ex:1.3-amd64
+        ports:
+        - containerPort: 3000
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            # 아래 조건을 만족하는 노드에만 스케줄링
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: region
+                operator: In
+                values:
+                - us-east
+                - us-west   # region이 us-east 또는 us-west
+              - key: environment
+                operator: In
+                values:
+                - production # environment가 production

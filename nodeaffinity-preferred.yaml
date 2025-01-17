@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nodeaffinity-preferred
+spec:
+  replicas: 16
+  selector:
+    matchLabels:
+      app: nodeaffinity-preferred
+  template:
+    metadata:
+      labels:
+        app: nodeaffinity-preferred
+    spec:
+      containers:
+      - name: nodeaffinity-preferred-container
+        image: ghcr.io/ej31/jeff-ex:1.3-amd64
+        ports:
+        - containerPort: 3000
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            # 스케줄링 시점에 특정 조건을 최대한 맞춰보려 노력하되
+            # 조건에 맞는 노드가 없으면 다른 노드에도 배포 가능
+            - weight: 1
+              preference:
+                matchExpressions:
+                - key: environment
+                  operator: In
+                  values:
+                  - staging   # staging 환경을 선호

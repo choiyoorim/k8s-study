@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nodeaffinity-and-required
+spec:
+  replicas: 6
+  selector:
+    matchLabels:
+      app: nodeaffinity-and-required
+  template:
+    metadata:
+      labels:
+        app: nodeaffinity-and-required
+    spec:
+      containers:
+      - name: nodeaffinity-and-required-container
+        image: ghcr.io/ej31/jeff-ex:1.3-amd64
+        ports:
+        - containerPort: 3000
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            # K8s 스케줄러가 파드를 노드에 배치할 때(requiredDuringScheduling) 아래 조건을 반드시 만족해야 함
+            # 이후 Execution(파드 실행) 단계에서는 조건이 바뀌어도 무시(Ignored)
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: environment
+                operator: In
+                values:
+                - production   # environment 라벨이 production 이어야 함
+              - key: region
+                operator: In
+                values:
+                - us-east      # region 라벨이 us-east 이어야 함

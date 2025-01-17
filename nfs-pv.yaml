@@ -1,0 +1,14 @@
+# nfs-pv.yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs-pv
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    path: "/var/nfs_share"
+    server: "172.31.38.115"  # 중요 : nfs-server 가 설정 된 EC2의 privateIP 로 변경!
+  persistentVolumeReclaimPolicy: Retain

@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: no-toleration-deployment
+spec:
+  replicas: 10
+  selector:
+    matchLabels:
+      app: no-toleration
+  template:
+    metadata:
+      labels:
+        app: no-toleration
+    spec:
+      containers:
+        - name: no-toleration-container
+          image: ghcr.io/ej31/jeff-ex:1.3-amd64
+          ports:
+            - containerPort: 3000

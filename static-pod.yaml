@@ -1,0 +1,16 @@
+# static-pod-demo.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: static-pod-demo
+  namespace: default
+  labels:
+    app: static-pod-demo
+spec:
+  containers:
+    - name: static-pod-demo-container
+      image: nginx      
+      # 환경 변수나 추가 설정을 원하는 경우 여기서 진행
+      # env:
+      #   - name: EXAMPLE_ENV
+      #     value: "Hello from static pod"

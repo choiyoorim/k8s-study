@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jeff-ex-deployment
+spec:
+  replicas: 8
+  selector:
+    matchLabels:
+      app: jeff-ex
+  template:
+    metadata:
+      labels:
+        app: jeff-ex
+    spec:
+      containers:
+      - name: jeff-ex
+        image: ghcr.io/ej31/jeff-ex:1.3-amd64
+        ports:
+        - containerPort: 3000
